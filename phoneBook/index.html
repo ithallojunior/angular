@@ -1,0 +1,128 @@
+<html ng-app="phoneBook">
+
+<head>
+  
+  <title>Phone Book</title>
+  
+  <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css">
+  
+  <style>
+    .jumbotron {
+        width:  600px;
+        text-align: center;
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .table {
+        margin-top: 20px;
+    }
+    .form-control {
+        margin-bottom: 5px;
+    }
+
+    .selected {
+        background-color: gray;
+    }
+    .bold {
+        font-weight: bold;
+    }
+  </style>
+
+  <script src="lib/angular/angular.js"></script>
+
+<script>
+    angular.module("phoneBook", []);
+    angular.module("phoneBook").controller("phoneBookCtrl", function ($scope){
+      $scope.app = "Phone Book";
+      
+      $scope.persons = [
+        {name: "Person 1", number: "15555555", color: "blue" },
+        {name: "Person 2", number: "5555555", color: "yellow"}
+      ];
+      
+      $scope.carriers =  [
+        {name: "A", 'dial code': 15, kind: "landline"},
+        {name: "B", 'dial code': 41, kind: "mobile"}
+      ];
+      
+      $scope.colors = [
+      "yellow",
+      "green",
+      "blue",
+      "red",
+      "white",
+      "black"
+      ];
+
+      $scope.addContact = function (person){
+        $scope.persons.push(person);
+        delete $scope.person;
+      };
+      $scope.classe1="selected";
+      $scope.classe2="bold";
+      
+      $scope.deleteContacts = function (persons) {
+        $scope.persons = persons.filter(function (person) {
+          if (!person.selected) return person;
+        });
+      };
+      
+      $scope.isContactSelected = function (persons){
+        return  persons.some( function (person) {
+          return person.selected;
+          });
+        
+      };
+    });
+</script>
+
+</head>
+
+<body ng-controller="phoneBookCtrl">
+  <div class="jumbotron">
+    <h3> {{app}}</h3>
+    <table class="table" ng-show="persons.length > 0">
+      <tr>
+        <th>  </th>
+        <th>Name</th>
+        <th>Phone Number</th>
+        <th>Carrier</th>
+        <th>   </th>
+        <th></th>
+      </tr>
+      <tr ng-class="{'selected bold': person.selected}" ng-repeat="person in persons">
+        <td><input type="checkbox" ng-model="person.selected" /></td>
+        <td>{{person.name}}</td>
+        <td>{{person.number}} </td>
+        <td>{{person.carrier.name}}</td>
+        <td>{{person.carrier.name}}</td>
+        <td><div style="width: 20px; height: 20px" ng-style="{'background-color': person.color}" ></div></td>
+      </tr>
+    </table>
+    <hr/>
+    <input class="form-control" type="text" ng-model="person.name" placeholder="Name"/> 
+    <input class="form-control" type="text" ng-model="person.number" placeholder="Phone Number"/>
+    <select class="form-control" ng-model="person.carrier" ng-options="carrier.name group by carrier.kind for carrier in carriers">
+      <option value="">Select a carrier</option> 
+    </select>
+    <select class="form-control" ng-model="person.color" ng-options="color for color in colors" >
+    <option value=""> Select a color</option> 
+    </select>
+
+
+    <button class="btn btn-primary btn-block" ng-click="addContact(person)" ng-disabled="!person.name || !person.number" > New Contact </button>
+    
+    <button class="btn btn-danger btn-block" ng-click="deleteContacts(persons)" ng-show="isContactSelected (persons)"> Delete Contacts </button>
+  </div>
+
+ <div style="text-align: center">
+  Created by iguimaraes
+</div>
+
+  <!-- 
+  <div ng-include="'footer.hmtl'"></div>
+  <only works outside chome, ng-if, ng-hide remember -->
+
+</body>
+</html>
